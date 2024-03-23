@@ -25,7 +25,12 @@ const App = () => {
       <div className='wrapper'>
         <div className='grid-left'>
           {result ? (
-            <div className='result-content'></div>
+            <div className='result-content'>
+              <div className="head">Result</div>
+              <div className="graph">
+                
+              </div>
+            </div>
           ) : (
             <div className='no-result-content'>
               <div className='main-txt'>Enter something</div>
