@@ -28,6 +28,9 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   background: linear-gradient(158deg, #FAFAFA 0%, #FAFAFA 100%);
+  position: relative;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 .grid-left {
@@ -187,6 +190,75 @@
   cursor: pointer;
 }
 
+/*============== popup-window =============*/
+.popup-window-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fafafa85;
+  backdrop-filter: blur(4px);
+  height: 100vh;
+  z-index: 10;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .4s ease-in-out;
+}
+
+.popup-window {
+  width: 500px;
+  height: 500px;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  z-index: 100;
+  box-shadow: 0px 90px 153px 0px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.faces{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.face{
+  width: 140px;
+  height: 80px;
+  border-radius: 10px;
+  /* background-color: #307EF3; */
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.bottom-box{
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.next-btn{
+  width: 100px;
+  height: 56px;
+  background-color: #307EF3;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+/*============== responsive =============*/
 @media(max-width:800px) {
   .wrapper {
     grid-template-columns: 1fr;
