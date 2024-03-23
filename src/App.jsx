@@ -140,7 +140,11 @@ const App = () => {
           </div>
         </div>
       </div>
-      <div className='popup-window-container'>
+
+      <div 
+      className='popup-window-container'
+      style={{display:'none'}}
+      >
         <div className='popup-window'>
           <div className='top-box'>
             <div className='faces'>
