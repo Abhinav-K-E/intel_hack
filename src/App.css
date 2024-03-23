@@ -12,12 +12,13 @@
   height: 100vh;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  background: linear-gradient(158deg, #FAFAFA 0%, #FAFAFA 100%);
 }
 
 .grid-left {
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -30,11 +31,124 @@
 
 .sub-txt {
   font-size: 15px;
+  color: #7a7a7a;
+  line-height: 1.5rem;
   font-weight: 300;
 }
+
+/*=========== right-grid-box ============*/
 
 .grid-right {
   width: 100%;
   height: 100%;
+  padding: 40px;
+}
+
+.upload-card {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 90px 153px 0px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 20px;
+  gap: 20px;
+}
+
+.upload-preview {
+  width: 100%;
+  height: 220px;
+  background-color: #7a7a7a;
+  border-radius: 20px;
+}
+
+.check-boxs {
+  width: 100%;
+  flex-grow: 1;
+  max-height: 150px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+  gap: 20px;
+}
+
+.check-grp {
+  display: flex;
+  gap: 10px;
+  font-size: 15px;
+}
+
+/* Hide the default checkbox */
+.container input {
+  display: none;
+}
+
+.container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #2196F300;
+  border-radius: 0.25em;
+  transition: all 0.25s;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked~.checkmark {
+  background-color: #307EF3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  transform: rotate(0deg);
+  border: 0.1em solid #307EF3;
+  left: 0;
+  top: 0;
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 0.25em;
+  transition: all 0.25s, border-width 0.1s;
+}
+
+/* Show the checkmark when checked */
+.container input:checked~.checkmark:after {
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border-color: #fff0 white white #fff0;
+  border-width: 0 0.15em 0.15em 0;
+  border-radius: 0em;
+  transform: rotate(45deg);
+}
+
+
+.upload-btn {
+  width: 100%;
+  height: 80px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #307EF3;
+  color: #fff;
+  font-weight: 500;
+  font-size: 20px;
+  cursor: pointer;
 }
