@@ -38,7 +38,7 @@ const App = () => {
                 </video>
               </div>
             ) : (
-              <div {...getRootProps()}>
+              <div {...getRootProps()} className='upload-preview-grp'>
                 <input {...getInputProps()} />
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
