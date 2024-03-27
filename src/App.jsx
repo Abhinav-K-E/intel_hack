@@ -1,12 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './App.css';
 
 const App = () => {
   const [video, setVideo] = useState(null);
+  const [selectedDetectors, setSelectedDetectors] = useState([]);
+  const fileInputRef = useRef(null);
   const [result, setResult] = useState(null);
+  const [plotImage, setPlotImage] = useState(null);
 
-  // video functions
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     setVideo(file);
@@ -18,7 +20,62 @@ const App = () => {
     multiple: false, // Allow only one file to be uploaded
   });
 
-  // next-btn[image-face] selected function --> give graph result
+  function handleCheckboxChange(event) {
+    const { value, checked } = event.target;
+
+    if (checked) {
+      setSelectedDetectors((prevDetectors) => [...prevDetectors, value]);
+    } else {
+      setSelectedDetectors((prevDetectors) =>
+        prevDetectors.filter((detector) => detector !== value)
+      );
+    }
+  }
+
+  function selectFiles() {
+    fileInputRef.current.click();
+  }
+
+  async function uploadFile() {
+    if (!video) {
+      alert('Please select a video file!');
+      return;
+    }
+
+    const models = selectedDetectors;
+
+    const formData = new FormData();
+    formData.append('file', video);
+    formData.append('models', models.join(','));
+
+    try {
+      const response = await fetch('http://localhost:8000/models/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      setResult(result);
+      setPlotImage(null); // Reset plotImage when uploading a new file
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  }
+
+  async function fetchPlot() {
+    try {
+      const response = await fetch('http://localhost:8000/get_file');
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        setPlotImage(url);
+      } else {
+        console.error('Error fetching plot:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching plot:', error);
+    }
+  }
 
   return (
     <div className='app'>
@@ -26,10 +83,8 @@ const App = () => {
         <div className='grid-left'>
           {result ? (
             <div className='result-content'>
-              <div className="head">Result</div>
-              <div className="graph">
-                
-              </div>
+              <div className='head'>Result</div>
+              <div className='graph'></div>
             </div>
           ) : (
             <div className='no-result-content'>
@@ -59,6 +114,7 @@ const App = () => {
               ) : (
                 <div {...getRootProps()} className='upload-preview-grp'>
                   <input {...getInputProps()} />
+                  {/* Your upload SVG icon and text here */}
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     width={100}
@@ -75,81 +131,34 @@ const App = () => {
                 </div>
               )}
             </div>
-
             <div className='check-boxs'>
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
-
-              <div className='check-grp'>
-                <label className='container'>
-                  <input defaultChecked='checked' type='checkbox' />
-                  <div className='checkmark' />
-                </label>
-                <div className='check-name'>check 1</div>
-              </div>
+              {selectedDetectors.map((detectorValue, index) => (
+                <div key={index} className='check-grp'>
+                  <label className='container'>
+                    <input
+                      type='checkbox'
+                      value={detectorValue}
+                      onChange={handleCheckboxChange}
+                      checked={selectedDetectors.includes(detectorValue)}
+                    />
+                    <div className='checkmark' />
+                  </label>
+                  <div className='check-name'>check 1</div>
+                </div>
+              ))}
             </div>
-            <div className='upload-btn'>Upload</div>
+            <div className='upload-btn' onClick={uploadFile}>
+              Upload
+            </div>
+            <div className='upload-btn' onClick={fetchPlot}>
+              Get Result
+            </div>
           </div>
         </div>
       </div>
 
-      <div 
-      className='popup-window-container'
-      style={{display:'none'}}
-      >
+      {/* Your popup window container here */}
+      <div className='popup-window-container' style={{ display: 'none' }}>
         <div className='popup-window'>
           <div className='top-box'>
             <div className='faces'>
