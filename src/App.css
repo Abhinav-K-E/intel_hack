@@ -286,3 +286,19 @@
     font-size: 14px;
   }
 }
+
+/*loader*/
+.loader{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FAFAFA;
+}
+
+.loading-effect{
+  width: 200px;
+  border-radius: 50%;
+  height: 200px;
+}

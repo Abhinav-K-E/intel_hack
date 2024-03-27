@@ -13,15 +13,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-
-//chart values
+import Loader from './components/Loader';
 
 const data = [
-  { name: 'Page A', uv: 9.4 },
-  { name: 'Page B', uv: 8.2 },
-  { name: 'Page C', uv: 6.5 },
+  { name: 'Page A', accuracy: 9.4 },
+  { name: 'Page B', accuracy: 9.2 },
+  { name: 'Page C', accuracy: 9.5 },
 ];
-
 
 const App = () => {
   const [video, setVideo] = useState(null);
@@ -38,9 +36,12 @@ const App = () => {
     'model_97_acc_100_frames_FF_data',
   ]);
   const fileInputRef = useRef(null);
-  const [result, setResult] = useState(true);
+  const [result, setResult] = useState(null);
   const [plotImage, setPlotImage] = useState(null);
   const [checkboxState, setCheckboxState] = useState({});
+
+  // loader
+  const [loader, setLoader] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -87,6 +88,7 @@ const App = () => {
     formData.append('models', models.join(','));
 
     try {
+      setLoader(true);
       const response = await fetch('http://localhost:8000/models/', {
         method: 'POST',
         body: formData,
@@ -94,37 +96,40 @@ const App = () => {
 
       const result = await response.json();
       setResult(result);
+      setLoader(false);
       setPlotImage(null); // Reset plotImage when uploading a new file
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   }
 
-  async function fetchPlot() {
-    try {
-      const response = await fetch('http://localhost:8000/get_file');
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        setPlotImage(url);
-      } else {
-        console.error('Error fetching plot:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error fetching plot:', error);
-    }
-  }
+  // async function fetchPlot() {
+  //   try {
+  //     const response = await fetch('http://localhost:8000/get_file');
+  //     if (response.ok) {
+  //       const blob = await response.blob();
+  //       const url = URL.createObjectURL(blob);
+  //       setPlotImage(url);
+  //     } else {
+  //       console.error('Error fetching plot:', response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching plot:', error);
+  //   }
+  // }
 
-  return (
+  return loader ? (
+    <Loader />
+  ) : (
     <div className='app'>
       <div className='wrapper'>
         <div className='grid-left'>
           {result ? (
             <div className='result-content'>
-              <div className='head'>Result</div>
+              <div className='main-txt'>Result</div>
               <div className='graph'>
-                <BarChart width={500} height={500} data={data}>
-                  <Bar dataKey='uv' fill='#72AAFF' />
+                <BarChart width={480} height={480} data={data}>
+                  <Bar dataKey='accuracy' fill='#72AAFF' />
                   <XAxis dataKey='name' />
                   <YAxis />
                   <Tooltip />
@@ -198,9 +203,9 @@ const App = () => {
             <div className='upload-btn' onClick={uploadFile}>
               Upload
             </div>
-            <div className='upload-btn' onClick={fetchPlot}>
+            {/* <div className='upload-btn' onClick={fetchPlot}>
               Get Result
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
