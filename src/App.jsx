@@ -2,6 +2,27 @@ import React, { useCallback, useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './App.css';
 
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+
+//chart values
+
+const data = [
+  { name: 'Page A', uv: 9.4 },
+  { name: 'Page B', uv: 8.2 },
+  { name: 'Page C', uv: 6.5 },
+];
+
+
 const App = () => {
   const [video, setVideo] = useState(null);
   const [selectedDetectors, setSelectedDetectors] = useState([
@@ -17,7 +38,7 @@ const App = () => {
     'model_97_acc_100_frames_FF_data',
   ]);
   const fileInputRef = useRef(null);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState(true);
   const [plotImage, setPlotImage] = useState(null);
   const [checkboxState, setCheckboxState] = useState({});
 
@@ -101,7 +122,15 @@ const App = () => {
           {result ? (
             <div className='result-content'>
               <div className='head'>Result</div>
-              <div className='graph'></div>
+              <div className='graph'>
+                <BarChart width={500} height={500} data={data}>
+                  <Bar dataKey='uv' fill='#72AAFF' />
+                  <XAxis dataKey='name' />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                </BarChart>
+              </div>
             </div>
           ) : (
             <div className='no-result-content'>
