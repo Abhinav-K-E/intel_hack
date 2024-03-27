@@ -4,10 +4,22 @@ import './App.css';
 
 const App = () => {
   const [video, setVideo] = useState(null);
-  const [selectedDetectors, setSelectedDetectors] = useState([]);
+  const [selectedDetectors, setSelectedDetectors] = useState([
+    'model_84_acc_10_frames_final_data',
+    'model_87_acc_20_frames_final_data',
+    'model_89_acc_40_frames_final_data',
+    'model_90_acc_20_frames_FF_data',
+    'model_90_acc_60_frames_final_data',
+    'model_93_acc_100_frames_celeb_FF_data',
+    'model_95_acc_40_frames_FF_data',
+    'model_97_acc_60_frames_FF_data',
+    'model_97_acc_80_frames_FF_data',
+    'model_97_acc_100_frames_FF_data',
+  ]);
   const fileInputRef = useRef(null);
   const [result, setResult] = useState(null);
   const [plotImage, setPlotImage] = useState(null);
+  const [checkboxState, setCheckboxState] = useState({});
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -23,13 +35,18 @@ const App = () => {
   function handleCheckboxChange(event) {
     const { value, checked } = event.target;
 
-    if (checked) {
-      setSelectedDetectors((prevDetectors) => [...prevDetectors, value]);
-    } else {
-      setSelectedDetectors((prevDetectors) =>
-        prevDetectors.filter((detector) => detector !== value)
-      );
-    }
+    setSelectedDetectors(
+      (prevDetectors) =>
+        checked
+          ? [...prevDetectors, value] // Add to selectedDetectors if checked
+          : prevDetectors.filter((detector) => detector !== value) // Remove from selectedDetectors if unchecked
+    );
+
+    // Update the checked state separately
+    setCheckboxState((prevState) => ({
+      ...prevState,
+      [value]: checked,
+    }));
   }
 
   function selectFiles() {
@@ -132,20 +149,22 @@ const App = () => {
               )}
             </div>
             <div className='check-boxs'>
-              {selectedDetectors.map((detectorValue, index) => (
-                <div key={index} className='check-grp'>
-                  <label className='container'>
-                    <input
-                      type='checkbox'
-                      value={detectorValue}
-                      onChange={handleCheckboxChange}
-                      checked={selectedDetectors.includes(detectorValue)}
-                    />
-                    <div className='checkmark' />
-                  </label>
-                  <div className='check-name'>check 1</div>
-                </div>
-              ))}
+              <div className='check-boxs'>
+                {selectedDetectors.map((detectorValue, index) => (
+                  <div key={index} className='check-grp'>
+                    <label className='container'>
+                      <input
+                        type='checkbox'
+                        value={detectorValue}
+                        onChange={handleCheckboxChange}
+                        checked={checkboxState[detectorValue]}
+                      />
+                      <div className='checkmark' />
+                    </label>
+                    <div className='check-name'>{detectorValue}</div>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className='upload-btn' onClick={uploadFile}>
               Upload
